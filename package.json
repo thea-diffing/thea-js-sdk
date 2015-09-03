@@ -1,7 +1,7 @@
 {
   "name": "thea-js-sdk",
   "version": "1.0.1",
-  "description": "Get the common ancestor of a sha and a branch",
+  "description": "JS Sdk for interacting with the Thea Visual Diffing API",
   "main": "lib/index.js",
   "scripts": {
     "test": "eslint . && jscs lib test && mocha"
