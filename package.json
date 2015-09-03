@@ -1,6 +1,6 @@
 {
   "name": "thea-js-sdk",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "JS Sdk for interacting with the Thea Visual Diffing API",
   "main": "lib/index.js",
   "scripts": {
