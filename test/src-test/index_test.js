@@ -1,6 +1,7 @@
 'use strict';
 
 var nock = require('nock');
+var sinon = require('sinon-sandbox');
 var assert = require('chai').assert;
 var TheaSdk = require('../../');
 
@@ -99,6 +100,86 @@ describe('module/thea', function() {
           assert.fail();
         }, function(error) {
           assert.instanceOf(error, Error);
+        });
+      });
+    });
+
+    describe('#setProject', function() {
+      it('should set the projectId', function() {
+        assert.isUndefined(theaSdk.projectId);
+
+        theaSdk.setProject('4213');
+
+        assert.strictEqual(theaSdk.projectId, '4213');
+      });
+    });
+
+    describe('#startBuild', function() {
+      var makePostJsonRequestOriginal;
+      var makePostJsonRequestStub;
+
+      beforeEach(function() {
+        makePostJsonRequestStub = sinon.stub();
+
+        makePostJsonRequestOriginal = TheaSdk.__get__('makePostJsonRequest');
+        TheaSdk.__set__('makePostJsonRequest', makePostJsonRequestStub);
+      });
+
+      afterEach(function() {
+        TheaSdk.__set__('makePostJsonRequest', makePostJsonRequestOriginal);
+      });
+
+      it('should call makePostJsonRequest with endpoint', function() {
+        theaSdk.startBuild({
+          browser: 'chrome',
+          project: 'foo'
+        });
+
+        assert.calledWith(
+          makePostJsonRequestStub,
+          url + '/api/startBuild',
+          sinon.match.object
+        );
+      });
+
+      it('should call makePostJsonRequest with body if includes project', function() {
+        theaSdk.startBuild({
+          browser: 'chrome',
+          project: 'foo'
+        });
+
+        assert.calledWith(
+          makePostJsonRequestStub,
+          sinon.match.string,
+          {
+            browser: 'chrome',
+            project: 'foo'
+          }
+        );
+      });
+
+      it('should call makePostJsonRequest with project if does not include project and project set', function() {
+        theaSdk.setProject('bar');
+
+        theaSdk.startBuild({
+          browser: 'chrome'
+        });
+
+        assert.calledWith(
+          makePostJsonRequestStub,
+          sinon.match.string,
+          {
+            browser: 'chrome',
+            project: 'bar'
+          }
+        );
+      });
+
+      it('should throw if project is not specified and not set', function() {
+        assert.throws(function() {
+          theaSdk.startBuild({
+            browser: 'chrome'
+          });
         });
       });
     });
