@@ -51,9 +51,26 @@ describe('module/thea', function() {
       assert.strictEqual(theaWithoutTrailing.api, expected);
       assert.strictEqual(theaWithTrailing.api, expected);
     });
+
+    it('should not set project if not specified', function() {
+      var theaSdk = new TheaSdk({
+        api: 'https://myurl.com'
+      });
+
+      assert.isUndefined(theaSdk.project);
+    });
+
+    it('should set the project if specified', function() {
+      var theaSdk = new TheaSdk({
+        api: 'https://myurl.com',
+        project: 'foo'
+      });
+
+      assert.strictEqual(theaSdk.project, 'foo');
+    });
   });
 
-  describe('with a thea sdk', function() {
+  describe('constructed', function() {
     var url;
     var theaSdk;
 
@@ -105,12 +122,12 @@ describe('module/thea', function() {
     });
 
     describe('#setProject', function() {
-      it('should set the projectId', function() {
-        assert.isUndefined(theaSdk.projectId);
+      it('should set the project', function() {
+        assert.isUndefined(theaSdk.project);
 
         theaSdk.setProject('4213');
 
-        assert.strictEqual(theaSdk.projectId, '4213');
+        assert.strictEqual(theaSdk.project, '4213');
       });
     });
 
